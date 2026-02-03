@@ -7,9 +7,9 @@ import {
 } from '@tonkeeper/core/dist/entries/tonConnect';
 import {
     checkDappOriginMatchesManifest,
-    getBrowserPlatform,
     getDeviceInfo,
-    getManifest
+    getManifest,
+    getTonConnectPlatform
 } from '@tonkeeper/core/dist/service/tonConnect/connectService';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -150,9 +150,7 @@ const ConnectContent: FC<{
                         replyItems: {
                             items: replyItems,
                             device: getDeviceInfo(
-                                sdk.targetEnv === 'extension'
-                                    ? 'browser'
-                                    : getBrowserPlatform(),
+                                getTonConnectPlatform(sdk.targetEnv),
                                 sdk.version,
                                 maxMessages,
                                 appName

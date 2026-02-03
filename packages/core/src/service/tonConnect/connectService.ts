@@ -1,6 +1,7 @@
 import { Address, beginCell, storeStateInit } from '@ton/core';
 import { getSecureRandomBytes, keyPairFromSeed, sha256_sync } from '@ton/crypto';
 import queryString from 'query-string';
+import { TargetEnv } from '../../AppSdk';
 import { IStorage } from '../../Storage';
 import { TonConnectError } from '../../entries/exception';
 import { Network } from '../../entries/network';
@@ -188,6 +189,13 @@ export function getBrowserPlatform(): DeviceInfo['platform'] {
     }
 
     return os!;
+}
+
+export function getTonConnectPlatform(targetEnv: TargetEnv): DeviceInfo['platform'] {
+    if (targetEnv === 'extension') {
+        return 'browser';
+    }
+    return getBrowserPlatform();
 }
 
 export const getDeviceInfo = (

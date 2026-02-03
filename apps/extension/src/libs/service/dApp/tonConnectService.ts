@@ -13,6 +13,7 @@ import {
     checkTonConnectFromAndNetwork,
     getDeviceInfo,
     getInjectedDappConnection,
+    getTonConnectPlatform,
     tonConnectTonkeeperAppName,
     tonInjectedDisconnectRequest,
     tonInjectedReConnectRequest
@@ -38,12 +39,10 @@ const tonReConnectResponse = async (origin: string): Promise<TonConnectEventPayl
     };
 };
 
-export function getExtensionDeviceInfo(options?: {
-    maxMessages?: number;
-}): DeviceInfo {
+export function getExtensionDeviceInfo(options?: { maxMessages?: number }): DeviceInfo {
     const { version } = browser.runtime.getManifest();
     return getDeviceInfo(
-        'browser',
+        getTonConnectPlatform('extension'),
         version,
         options?.maxMessages ?? 255,
         tonConnectTonkeeperAppName
