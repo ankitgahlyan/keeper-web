@@ -160,7 +160,7 @@ export const getManifest = async (request: ConnectRequest) => {
     return manifest;
 };
 
-export function getBrowserPlatform(): DeviceInfo['platform'] {
+function getBrowserPlatform(): DeviceInfo['platform'] {
     const platform =
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window?.navigator as any)?.userAgentData?.platform || window?.navigator.platform;
