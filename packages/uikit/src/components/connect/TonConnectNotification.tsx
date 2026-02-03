@@ -150,7 +150,9 @@ const ConnectContent: FC<{
                         replyItems: {
                             items: replyItems,
                             device: getDeviceInfo(
-                                getBrowserPlatform(),
+                                sdk.targetEnv === 'extension'
+                                    ? 'browser'
+                                    : getBrowserPlatform(),
                                 sdk.version,
                                 maxMessages,
                                 appName
