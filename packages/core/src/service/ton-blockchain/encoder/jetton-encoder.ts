@@ -10,10 +10,10 @@ type AssetAmountSimple = Pick<AssetAmount<TonAsset>, 'stringWeiAmount'> & {
     asset: Pick<TonAsset, 'address'>;
 };
 
-export class JettonWalletNotFound extends Error {}
+export class JettonWalletNotFound extends Error { }
 
 export class JettonEncoder {
-    static jettonTransferAmount = toNano(0.05);
+    static jettonTransferAmount = toNano(0.55);
 
     static jettonTransferForwardAmount = BigInt(1);
 
@@ -38,22 +38,22 @@ export class JettonEncoder {
             .endCell();
     };
 
-    constructor(private readonly api: APIConfig, private readonly walletAddress: string) {}
+    constructor(private readonly api: APIConfig, private readonly walletAddress: string) { }
 
     encodeTransfer = async (
         transfer:
             | {
-                  to: string;
-                  amount: AssetAmountSimple | AssetAmount<TonAsset>;
-                  payload?: MessagePayloadParam;
-                  responseAddress?: string;
-              }
+                to: string;
+                amount: AssetAmountSimple | AssetAmount<TonAsset>;
+                payload?: MessagePayloadParam;
+                responseAddress?: string;
+            }
             | {
-                  to: string;
-                  amount: AssetAmountSimple | AssetAmount<TonAsset>;
-                  payload?: MessagePayloadParam;
-                  responseAddress?: string;
-              }[]
+                to: string;
+                amount: AssetAmountSimple | AssetAmount<TonAsset>;
+                payload?: MessagePayloadParam;
+                responseAddress?: string;
+            }[]
     ): Promise<WalletOutgoingMessage> => {
         if (Array.isArray(transfer)) {
             return this.encodeMultiTransfer(transfer);
@@ -129,10 +129,13 @@ export class JettonEncoder {
         payload?: MessagePayloadParam;
         responseAddress?: string;
     }): Promise<WalletOutgoingMessage> => {
-        const { customPayload, stateInit, jettonWalletAddress } = await this.jettonCustomPayload(
+        let { customPayload, stateInit, jettonWalletAddress } = await this.jettonCustomPayload(
             tonAssetAddressToString(amount.asset.address)
         );
-
+        // determine custom payload
+        if (!customPayload && payload && payload.value === 'x') {
+            customPayload = beginCell().storeUint(0, 64).endCell();
+        }
         const jettonAmount = BigInt(amount.stringWeiAmount);
 
         const body = JettonEncoder.encodeTransferBody({

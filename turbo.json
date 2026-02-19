@@ -6,7 +6,7 @@
             "outputs": [".next/**", "dist/**"]
         },
         "build:pkg": {
-            "cache": false,
+            "cache": true,
             "dependsOn": ["^build:pkg"],
             "outputs": [".next/**", "dist/**"]
         },
@@ -19,10 +19,12 @@
             "outputs": [".next/**", "dist/**"]
         },
         "build:twa": {
+            "cache": true,
             "dependsOn": ["^build:pkg"],
             "outputs": [".next/**", "dist/**"]
         },
         "build:web": {
+            "cache": true,
             "dependsOn": ["^build:pkg"],
             "outputs": [".next/**", "dist/**"]
         },

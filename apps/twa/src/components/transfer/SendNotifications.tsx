@@ -26,8 +26,9 @@ import {
     childFactoryCreator,
     duration,
     makeTransferInitAmountState,
-    makeTonTransferInitData, makeTronTransferInitData
-} from "@tonkeeper/uikit/dist/components/transfer/common";
+    makeTonTransferInitData,
+    makeTronTransferInitData
+} from '@tonkeeper/uikit/dist/components/transfer/common';
 import { useAppContext } from '@tonkeeper/uikit/dist/hooks/appContext';
 import { useAppSdk } from '@tonkeeper/uikit/dist/hooks/appSdk';
 import { openIosKeyboard } from '@tonkeeper/uikit/dist/hooks/ios';
@@ -51,7 +52,7 @@ import {
     RecipientTwaHeaderBlock
 } from './SendNotificationHeader';
 import { useAnalyticsTrack } from '@tonkeeper/uikit/dist/hooks/analytics';
-import { TRON_USDT_ASSET } from '@tonkeeper/core/dist/entries/crypto/asset/constants';
+import { TRON_USDT_ASSET, TON_ASSET } from '@tonkeeper/core/dist/entries/crypto/asset/constants';
 import { seeIfValidTonAddress, seeIfValidTronAddress } from '@tonkeeper/core/dist/utils/common';
 import { useActiveWallet } from '@tonkeeper/uikit/dist/state/wallet';
 
@@ -90,7 +91,7 @@ const SendContent: FC<{
         if (initRecipient) {
             track('send_click', {
                 from: 'send_amount',
-                token: amountViewState?.token?.symbol ?? 'ton'
+                token: amountViewState?.assetAmount?.asset?.symbol ?? 'ton'
             });
         }
     }, []);
@@ -101,15 +102,17 @@ const SendContent: FC<{
 
     const setRecipient = (value: RecipientData) => {
         if (
-            amountViewState?.token?.blockchain &&
-            amountViewState?.token?.blockchain !== value.address.blockchain
+            amountViewState?.assetAmount?.asset?.blockchain &&
+            amountViewState?.assetAmount?.asset?.blockchain !== value.address.blockchain
         ) {
             setAmountViewState(undefined);
         }
 
         _setRecipient(value);
         if (activeTronWallet && value.address.blockchain === BLOCKCHAIN_NAME.TRON) {
-            setAmountViewState({ token: TRON_USDT_ASSET });
+            setAmountViewState({
+                assetAmount: AssetAmount.fromRelativeAmount({ asset: TRON_USDT_ASSET, amount: 0 })
+            });
         }
     };
 
@@ -127,7 +130,7 @@ const SendContent: FC<{
         setView('amount');
         track('send_click', {
             from: 'send_recipient',
-            token: amountViewState?.token?.symbol ?? 'ton'
+            token: amountViewState?.assetAmount?.asset?.symbol ?? 'ton'
         });
     };
 
@@ -137,7 +140,7 @@ const SendContent: FC<{
         setView('confirm');
         track('send_confirm', {
             from: 'send_amount',
-            token: amountViewState?.token?.symbol ?? 'ton'
+            token: amountViewState?.assetAmount?.asset?.symbol ?? 'ton'
         });
     };
 
@@ -203,15 +206,16 @@ const SendContent: FC<{
                 });
 
                 setAmountViewState({
-                    coinValue: assetAmount.relativeAmount,
-                    token: actualAsset,
+                    assetAmount,
                     inFiat: false,
                     isMax: false
                 });
             } else {
                 setAmountViewState({
-                    coinValue: a ? shiftedDecimals(a) : new BigNumber('0'),
-                    token: initAmountState?.token,
+                    assetAmount: new AssetAmount({
+                        asset: initAmountState?.assetAmount?.asset ?? TON_ASSET,
+                        weiAmount: a ?? 0
+                    }),
                     inFiat: false,
                     isMax: false
                 });
@@ -219,7 +223,7 @@ const SendContent: FC<{
 
             return true;
         },
-        [sdk, filter, initAmountState?.token]
+        [sdk, filter, initAmountState?.assetAmount]
     );
 
     const onScan = async (signature: string) => {
@@ -251,15 +255,15 @@ const SendContent: FC<{
     }[view];
 
     const assetAmount = useMemo(() => {
-        if (!amountViewState?.token || !amountViewState?.coinValue) {
+        if (!amountViewState?.assetAmount?.asset || !amountViewState?.assetAmount?.relativeAmount) {
             return null;
         }
 
         return AssetAmount.fromRelativeAmount({
-            asset: amountViewState!.token!,
-            amount: amountViewState!.coinValue!
+            asset: amountViewState!.assetAmount!.asset,
+            amount: amountViewState!.assetAmount!.relativeAmount
         });
-    }, [amountViewState?.token, amountViewState?.coinValue]);
+    }, [amountViewState?.assetAmount?.asset, amountViewState?.assetAmount?.relativeAmount]);
 
     let acceptBlockchains: BLOCKCHAIN_NAME[] = [];
     if (chain) {
@@ -367,9 +371,7 @@ export const TwaSendNotification: FC<PropsWithChildren> = ({ children }) => {
             setChain(chain);
 
             if (transfer.chain === BLOCKCHAIN_NAME.TRON) {
-                setTransferParams(
-                  makeTronTransferInitData(transfer)
-                );
+                setTransferParams(makeTronTransferInitData(transfer));
                 setOpen(true);
 
                 track('send_open', { from: transfer.from });
