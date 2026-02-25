@@ -4,13 +4,13 @@ import { intlLocale } from '../entries/language';
 
 export interface BootParams {
     platform:
-        | 'web'
-        | 'desktop'
-        | 'tablet'
-        | 'extension'
-        | 'pro_mobile_ios'
-        | 'swap_widget_web'
-        | 'twa';
+    | 'web'
+    | 'desktop'
+    | 'tablet'
+    | 'extension'
+    | 'pro_mobile_ios'
+    | 'swap_widget_web'
+    | 'twa';
     lang: 'en' | 'ru' | string;
     build: string;
     network: Network;
@@ -112,18 +112,18 @@ export interface TonendpointConfig {
 
 export const defaultTonendpointConfig: TonendpointConfig = {
     flags: {
-        disable_staking: false,
-        disable_tron: false,
-        disable_battery: false,
-        disable_gaseless: false,
-        disable_swap: false,
-        disable_2fa: false,
-        disable_signer: false,
-        disable_exchange_methods: false,
-        disable_dapps: false,
-        disable_usde: false,
+        disable_staking: true,
+        disable_tron: true,
+        disable_battery: true,
+        disable_gaseless: true,
+        disable_swap: true,
+        disable_2fa: true,
+        disable_signer: true,
+        disable_exchange_methods: true,
+        disable_dapps: true,
+        disable_usde: true,
         disable_nfts: false,
-        disable_crypto_subscription: false
+        disable_crypto_subscription: true
     },
     ton_connect_bridge: 'https://bridge.tonapi.io',
     tonapiV2Endpoint: 'https://keeper.tonapi.io',
@@ -135,7 +135,7 @@ export const defaultTonendpointConfig: TonendpointConfig = {
     pro_dev_api_url: 'https://dev-pro.tonconsole.com',
     batteryMeanFees: '0.0026',
     batteryReservedAmount: '0.065',
-    disable_battery: false,
+    disable_battery: true,
     battery_packages: [
         {
             value: 1000,

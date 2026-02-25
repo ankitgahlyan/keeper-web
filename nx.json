@@ -1,0 +1,95 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:pkg": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:swap-widget": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:ipad": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:twa": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:web": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    },
+    "build:extension": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": false
+    },
+    "build:desktop": {
+      "dependsOn": [
+        "^build:pkg"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": [
+        "^dev"
+      ],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "{projectRoot}/dist/**"
+      ],
+      "cache": true
+    }
+  }
+}

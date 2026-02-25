@@ -7,7 +7,7 @@ export enum Network {
     TESTNET = -3
 }
 
-export const defaultNetwork = Network.MAINNET;
+export const defaultNetwork = Network.TESTNET;
 
 export const switchNetwork = (current: Network): Network => {
     return current === Network.MAINNET ? Network.TESTNET : Network.MAINNET;
